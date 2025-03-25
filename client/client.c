@@ -31,7 +31,7 @@ void* receive_messages(void* arg) {
         char plaintext[MAX_MSG_LEN];
         decrypt_message(aes_key, packet.iv, packet.encrypted_msg, packet.msg_len, plaintext);
 
-        printf("\n\x1b[38;2;%d;%d;%dm%s: %s\x1b[0m\n", 
+        printf("\x1b[38;2;%d;%d;%dm%s: %s\x1b[0m\n", 
                packet.color[0], packet.color[1], packet.color[2],
                packet.username, plaintext);
 

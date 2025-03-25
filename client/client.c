@@ -31,12 +31,11 @@ void* receive_messages(void* arg) {
         char plaintext[MAX_MSG_LEN];
         decrypt_message(aes_key, packet.iv, packet.encrypted_msg, packet.msg_len, plaintext);
 
-        // Перемещаем курсор на новую строку перед выводом
         printf("\n\x1b[38;2;%d;%d;%dm%s: %s\x1b[0m\n", 
                packet.color[0], packet.color[1], packet.color[2],
                packet.username, plaintext);
 
-        fflush(stdout);  // Сброс буфера вывода
+        fflush(stdout);
     }
     return NULL;
 }
@@ -50,10 +49,7 @@ int main() {
     };
 
     connect(sock, (struct sockaddr*)&addr, sizeof(addr));
-
-    // Генерация ключа (в реальности должен быть обмен ключами!)
-    //RAND_bytes(aes_key, sizeof(aes_key));
-
+	
     memcpy(aes_key, "32-CHARACTER-KEY-1234567890-ABC", sizeof(aes_key));
 
     char username[MAX_USERNAME_LEN];
@@ -64,7 +60,7 @@ int main() {
     uint8_t color[3];
     printf("Enter RGB color (e.g., 255 0 0): ");
     scanf("%hhu %hhu %hhu", &color[0], &color[1], &color[2]);
-    getchar(); // Очистка буфера
+    getchar();
 
     pthread_t thread;
     pthread_create(&thread, NULL, receive_messages, &sock);

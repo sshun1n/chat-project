@@ -20,7 +20,3 @@ cd client && make
 # Сборка сервера
 cd ../server && make
 ```
-graph TD
-    Client[Клиент] -->|Зашифрованные данные| Server[Сервер]
-    Server -->|Шифрование AES| Database[(Хранилище)]
-    Server -->|Бродкаст| Client

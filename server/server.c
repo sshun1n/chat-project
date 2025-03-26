@@ -13,7 +13,20 @@
 
 int client_sockets[MAX_CLIENTS];
 pthread_mutex_t clients_mutex = PTHREAD_MUTEX_INITIALIZER;
-uint8_t aes_key[AES_KEY_SIZE/8] = "32-CHARACTER-KEY-1234567890-ABC";
+
+void log_packet(const ChatPacket* packet) {
+    time_t now = time(NULL);
+    struct tm* tm_info = localtime(&now);
+    char timestamp[20];
+    strftime(timestamp, 20, "%Y-%m-%d %H:%M:%S", tm_info);
+    
+    FILE* log_file = fopen("server.log", "a");
+    if (log_file) {
+        fprintf(log_file, "[%s] Received encrypted packet from %s\n", 
+                timestamp, packet->username);
+        fclose(log_file);
+    }
+}
 
 void* handle_client(void* arg) {
     int client_fd = *(int*)arg;
@@ -25,16 +38,11 @@ void* handle_client(void* arg) {
 
         ChatPacket packet;
         deserialize_packet(buffer, &packet);
+        
+        // Логирование зашифрованного пакета
+        log_packet(&packet);
 
-        char plaintext[MAX_MSG_LEN];
-        decrypt_message(aes_key, packet.iv, packet.encrypted_msg, packet.msg_len, plaintext);
-
-        // Форматируем сообщение с цветом
-        printf("\x1b[38;2;%d;%d;%dm%s: %s\x1b[0m", 
-               packet.color[0], packet.color[1], packet.color[2],
-               packet.username, plaintext);
-
-        // Рассылка всем клиентам
+        // Пересылка всем клиентам без изменений
         pthread_mutex_lock(&clients_mutex);
         for (int i = 0; i < MAX_CLIENTS; i++) {
             if (client_sockets[i] != 0 && client_sockets[i] != client_fd) {

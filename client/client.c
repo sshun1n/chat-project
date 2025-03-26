@@ -21,7 +21,7 @@ void* receive_messages(void* arg) {
     while (1) {
         int bytes_read = read(sock, buffer, BUFFER_SIZE);
         if (bytes_read <= 0) {
-            printf("\nСоединение разорвано\n");
+            printf("\nConnection lost\n");
             exit(EXIT_FAILURE);
         }
 
@@ -29,9 +29,10 @@ void* receive_messages(void* arg) {
         deserialize_packet(buffer, &packet);
 
         char plaintext[MAX_MSG_LEN];
-        decrypt_message(aes_key, packet.iv, packet.encrypted_msg, packet.msg_len, plaintext);
+        decrypt_message(aes_key, packet.iv, 
+                       packet.encrypted_msg, packet.msg_len, plaintext);
 
-        printf("\x1b[38;2;%d;%d;%dm%s: %s\x1b[0m\n", 
+        printf("\033[38;2;%d;%d;%dm%s: %s\033[0m\n", 
                packet.color[0], packet.color[1], packet.color[2],
                packet.username, plaintext);
 
@@ -69,19 +70,20 @@ int main() {
     pthread_create(&thread, NULL, receive_messages, &sock);
 
     while (1) {
-	fflush(stdout);
+	    fflush(stdout);
+    
         char msg[MAX_MSG_LEN];
-        fgets(msg, MAX_MSG_LEN, stdin);
+        if (fgets(msg, MAX_MSG_LEN, stdin) == NULL) break;
         msg[strcspn(msg, "\n")] = 0;
 
         ChatPacket packet;
         strncpy(packet.username, username, MAX_USERNAME_LEN);
         memcpy(packet.color, color, 3);
 
-        uint8_t iv[AES_BLOCK_SIZE];
-        RAND_bytes(iv, AES_BLOCK_SIZE);
-        encrypt_message(aes_key, iv, msg, packet.encrypted_msg, &packet.msg_len);
-        memcpy(packet.iv, iv, AES_BLOCK_SIZE);
+        // Шифрование на стороне клиента
+        RAND_bytes(packet.iv, EVP_MAX_IV_LENGTH);
+        encrypt_message(aes_key, packet.iv, msg, 
+                    packet.encrypted_msg, &packet.msg_len);
 
         uint8_t buffer[BUFFER_SIZE];
         serialize_packet(&packet, buffer);

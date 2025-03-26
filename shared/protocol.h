@@ -1,5 +1,6 @@
 #pragma once
 #include <openssl/aes.h>
+#include <openssl/evp.h>
 #include <stdint.h>
 
 #define MAX_USERNAME_LEN 32
@@ -9,9 +10,9 @@
 typedef struct {
     char username[MAX_USERNAME_LEN];
     uint8_t color[3];
-    uint32_t msg_len;
-    uint8_t iv[AES_BLOCK_SIZE];
+    uint8_t iv[EVP_MAX_IV_LENGTH];
     uint8_t encrypted_msg[MAX_MSG_LEN];
+    uint32_t msg_len;
 } ChatPacket;
 
 void serialize_packet(const ChatPacket* packet, uint8_t* buffer);

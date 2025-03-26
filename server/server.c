@@ -5,8 +5,8 @@
 #include <netinet/in.h>
 #include <pthread.h>
 #include <unistd.h>
+
 #include "../shared/protocol.h"
-#include "../shared/crypto.h"
 
 #define MAX_CLIENTS 10
 #define BUFFER_SIZE sizeof(ChatPacket)

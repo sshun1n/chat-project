@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -I../shared
+CFLAGS = -Wall -Wno-deprecated-declarations -I../shared
 LDFLAGS = -lcrypto
 
 all: client

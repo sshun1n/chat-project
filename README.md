@@ -7,7 +7,7 @@
 ### Зависимости
 ```bash
 # Ubuntu/Debian
-sudo apt install libncursesw5-dev libssl-dev
+sudo apt install libncurses-dev libssl-dev build-essential
 ```
 
 ### Сборка

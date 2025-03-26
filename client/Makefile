@@ -1,6 +1,6 @@
 CC = gcc
-CFLAGS = -Wall -Wno-deprecated-declarations -I../shared
-LDFLAGS = -lcrypto
+CFLAGS = -Wall -Wno-deprecated-declarations -D_XOPEN_SOURCE_EXTENDED -I../shared
+LDFLAGS = -lcrypto -lncursesw
 
 all: client
 

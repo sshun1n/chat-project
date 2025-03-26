@@ -1,7 +1,5 @@
 # Secure Terminal Chat 🔒
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/sshun1n/secure-chat/build.yml)](https://github.com/sshun1n/secure-chat/actions)
-
 Реализация безопасного терминального чата с шифрованием AES-256 и поддержкой кириллицы.
 
 ## Установка ⚙️

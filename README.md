@@ -12,7 +12,8 @@ sudo apt install libncurses-dev libssl-dev build-essential
 
 ### Сборка
 ```bash
-git clone https://github.com/yourusername/secure-chat.git
+# SSH
+git clone git@github.com:sshun1n/chat-project.git
 
 # Сборка клиента
 cd client && make

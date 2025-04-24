@@ -2,8 +2,13 @@
 #include <stdint.h>
 #include <openssl/evp.h>
 
+#define LOG_FILE "server.log"
+#define MAX_CLIENTS 10
+#define DEFAULT_PORT 25565
+#define IP_ADDR_LEN 16
+
 #define AES_KEY_SIZE 256
-#define EVP_MAX_IV_LENGTH 16 // Для AES-CBC
+#define EVP_MAX_IV_LENGTH 16
 
 static const uint8_t MY_AES_KEY[32] = {
     0x32, 0x43, 0x48, 0x41, 0x52, 0x41, 0x43, 0x54,
